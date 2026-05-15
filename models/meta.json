@@ -1,0 +1,95 @@
+{
+  "feature_names": [
+    "age",
+    "work_years",
+    "monthly_income",
+    "provident_fund_months",
+    "bank_balance",
+    "existing_monthly_payment",
+    "credit_card_used",
+    "credit_card_limit",
+    "inquiries_6m",
+    "inquiries_2y",
+    "overdue_count",
+    "overdue_90d",
+    "has_property",
+    "property_value",
+    "property_loan",
+    "loan_amount",
+    "loan_term",
+    "is_salary_bank",
+    "has_existing_product",
+    "dti",
+    "cc_utilization",
+    "net_property_value",
+    "income_per_1k_loan",
+    "job_gov",
+    "job_state",
+    "job_private",
+    "job_self",
+    "job_none"
+  ],
+  "job_types": [
+    "gov",
+    "state",
+    "private",
+    "self",
+    "none"
+  ],
+  "models": {
+    "global": {
+      "samples": 3000,
+      "pass_rate": "28.3%",
+      "cv_auc": "0.963",
+      "path": "/Users/earlju/Library/Application Support/Claude/local-agent-mode-sessions/0c0c5d52-bc35-489c-99d1-eee13cfdd561/840dbbf8-611b-44c0-89b0-db142a1cdf4f/local_d163cc36-52b4-4286-9d5b-657248ce2fd8/outputs/smartloan/data/model/models/global.joblib"
+    },
+    "abc_wanlifu": {
+      "samples": 377,
+      "pass_rate": "15.4%",
+      "cv_auc": "0.989",
+      "path": "/Users/earlju/Library/Application Support/Claude/local-agent-mode-sessions/0c0c5d52-bc35-489c-99d1-eee13cfdd561/840dbbf8-611b-44c0-89b0-db142a1cdf4f/local_d163cc36-52b4-4286-9d5b-657248ce2fd8/outputs/smartloan/data/model/models/abc_wanlifu.joblib"
+    },
+    "boc_suidaidai": {
+      "samples": 377,
+      "pass_rate": "30.8%",
+      "cv_auc": "0.994",
+      "path": "/Users/earlju/Library/Application Support/Claude/local-agent-mode-sessions/0c0c5d52-bc35-489c-99d1-eee13cfdd561/840dbbf8-611b-44c0-89b0-db142a1cdf4f/local_d163cc36-52b4-4286-9d5b-657248ce2fd8/outputs/smartloan/data/model/models/boc_suidaidai.joblib"
+    },
+    "ccb_quick": {
+      "samples": 376,
+      "pass_rate": "35.6%",
+      "cv_auc": "0.994",
+      "path": "/Users/earlju/Library/Application Support/Claude/local-agent-mode-sessions/0c0c5d52-bc35-489c-99d1-eee13cfdd561/840dbbf8-611b-44c0-89b0-db142a1cdf4f/local_d163cc36-52b4-4286-9d5b-657248ce2fd8/outputs/smartloan/data/model/models/ccb_quick.joblib"
+    },
+    "citic_huimin": {
+      "samples": 382,
+      "pass_rate": "30.4%",
+      "cv_auc": "0.987",
+      "path": "/Users/earlju/Library/Application Support/Claude/local-agent-mode-sessions/0c0c5d52-bc35-489c-99d1-eee13cfdd561/840dbbf8-611b-44c0-89b0-db142a1cdf4f/local_d163cc36-52b4-4286-9d5b-657248ce2fd8/outputs/smartloan/data/model/models/citic_huimin.joblib"
+    },
+    "cmb_flash": {
+      "samples": 362,
+      "pass_rate": "30.7%",
+      "cv_auc": "0.991",
+      "path": "/Users/earlju/Library/Application Support/Claude/local-agent-mode-sessions/0c0c5d52-bc35-489c-99d1-eee13cfdd561/840dbbf8-611b-44c0-89b0-db142a1cdf4f/local_d163cc36-52b4-4286-9d5b-657248ce2fd8/outputs/smartloan/data/model/models/cmb_flash.joblib"
+    },
+    "icbc_rong_e": {
+      "samples": 379,
+      "pass_rate": "15.3%",
+      "cv_auc": "0.979",
+      "path": "/Users/earlju/Library/Application Support/Claude/local-agent-mode-sessions/0c0c5d52-bc35-489c-99d1-eee13cfdd561/840dbbf8-611b-44c0-89b0-db142a1cdf4f/local_d163cc36-52b4-4286-9d5b-657248ce2fd8/outputs/smartloan/data/model/models/icbc_rong_e.joblib"
+    },
+    "pingan_new1": {
+      "samples": 382,
+      "pass_rate": "40.3%",
+      "cv_auc": "0.994",
+      "path": "/Users/earlju/Library/Application Support/Claude/local-agent-mode-sessions/0c0c5d52-bc35-489c-99d1-eee13cfdd561/840dbbf8-611b-44c0-89b0-db142a1cdf4f/local_d163cc36-52b4-4286-9d5b-657248ce2fd8/outputs/smartloan/data/model/models/pingan_new1.joblib"
+    },
+    "spdb_puhui": {
+      "samples": 365,
+      "pass_rate": "27.7%",
+      "cv_auc": "0.983",
+      "path": "/Users/earlju/Library/Application Support/Claude/local-agent-mode-sessions/0c0c5d52-bc35-489c-99d1-eee13cfdd561/840dbbf8-611b-44c0-89b0-db142a1cdf4f/local_d163cc36-52b4-4286-9d5b-657248ce2fd8/outputs/smartloan/data/model/models/spdb_puhui.joblib"
+    }
+  }
+}
