@@ -25,10 +25,11 @@ class Predictor:
         self.feature_names = self.meta["feature_names"]
         self.job_types     = self.meta["job_types"]
 
-        # 加载所有模型
+        # 加载所有模型（用相对路径，兼容本地和云端部署）
+        models_dir = os.path.join(BASE, "models")
         self.models = {}
-        for name, info in self.meta["models"].items():
-            path = info["path"]
+        for name in self.meta["models"].keys():
+            path = os.path.join(models_dir, f"{name}.joblib")
             if os.path.exists(path):
                 self.models[name] = joblib.load(path)
 
