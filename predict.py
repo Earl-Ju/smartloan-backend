@@ -77,7 +77,7 @@ class Predictor:
         X = self._extract(form)
         model = self.models.get(product_id) or self.models.get("global")
         if model is None:
-            return {"product": product_id, "pass_prob": 0.5, "confidence": "low"}
+            return {"product": product_id, "pass_prob": 0.5, "pass_pct": 50, "confidence": "low"}
 
         prob = float(model.predict_proba(X)[0][1])  # P(pass)
         confidence = "high" if prob > 0.75 or prob < 0.25 else "medium" if prob > 0.6 or prob < 0.4 else "low"
