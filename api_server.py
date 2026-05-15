@@ -85,7 +85,17 @@ class EvaluateRequest(BaseModel):
 # ── 接口 ─────────────────────────────────────────────────────────
 @app.get("/health")
 async def health():
-    return {"status": "ok", "models_loaded": predictor is not None}
+    import os
+    base = os.path.dirname(os.path.abspath(__file__))
+    models_dir = os.path.join(base, "models")
+    files = os.listdir(models_dir) if os.path.exists(models_dir) else []
+    return {
+        "status": "ok",
+        "models_loaded": predictor is not None,
+        "model_count": len(predictor.models) if predictor else 0,
+        "models_dir": models_dir,
+        "files_in_models_dir": sorted(files),
+    }
 
 @app.post("/api/evaluate")
 async def evaluate(req: EvaluateRequest):
