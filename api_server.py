@@ -47,34 +47,39 @@ async def add_pna_header(request: Request, call_next):
 
 # ── 全局加载模型 ──────────────────────────────────────────────────
 predictor: Optional[Predictor] = None
-startup_error: str = ""
 
 @app.on_event("startup")
 async def startup_event():
-    global predictor, startup_error
+    global predictor
     try:
         predictor = Predictor()
         print("✓ 模型加载完成")
     except Exception as e:
-        startup_error = str(e)
         print(f"✗ 模型加载失败: {e}")
 
 # ── 文档解析 Prompts ──────────────────────────────────────────────
 PARSE_PROMPTS = {
-    "credit_report": """你是中国银行贷款审批专家，擅长解读央行征信报告。
-从这份征信报告（PDF或截图）中提取以下字段，只返回JSON，不要解释。
+    "credit_report": """你是中国银行贷款审批专家，擅长解读央行个人信用报告（人行征信报告）。
+从这份征信报告（PDF或截图）中精确提取以下字段，只返回JSON，不要解释。
+
+重要规则：
+1. 查询次数【只统计"机构查询记录"中查询原因为"贷款审批"或"信用卡审批"的记录】
+   - 不计入：贷后管理、本人查询、担保资格审查、法人代表/高管资信审查
+2. 报告时间作为"今天"，据此计算近6个月和近2年的范围
+3. 信用卡只统计人民币账户，忽略美元/外币账户
+4. existing_monthly_payment：如报告中有明确的月还款额就填，否则填null
 
 {
-  "inquiries_6m": 近6个月征信查询次数（整数，包括贷款和信用卡申请查询）,
-  "inquiries_2y": 近2年征信查询次数（整数）,
-  "overdue_count": 近2年逾期还款次数（整数，含信用卡和贷款）,
-  "overdue_90d": 是否有90天及以上严重逾期记录（true或false）,
-  "existing_monthly_payment": 当前所有贷款月还款额合计（数字，单位元，如无贷款则为0）,
-  "credit_card_used": 信用卡已用额度合计（数字，单位元）,
-  "credit_card_limit": 信用卡授信总额度（数字，单位元）
+  "inquiries_6m": 近6个月内"贷款审批"+"信用卡审批"查询次数合计（整数），
+  "inquiries_2y": 近2年内"贷款审批"+"信用卡审批"查询次数合计（整数），
+  "overdue_count": 近2年逾期还款总次数（整数；信用概要中"发生过逾期的账户数"不为"--"则查明细累计；若显示"--"则为0），
+  "overdue_90d": 是否有90天以上严重逾期（true/false；概要"发生过90天以上逾期的账户数"不为"--"则为true），
+  "existing_monthly_payment": 当前未结清贷款月还款总额（数字，单位元；若报告中无此数据则为null），
+  "credit_card_used": 所有人民币信用卡已使用额度合计（数字，单位元；余额栏或已使用额度栏求和），
+  "credit_card_limit": 所有人民币信用卡授信额度合计（数字，单位元）
 }
 
-如某字段在报告中找不到，值设为null。只输出JSON，不含任何其他文字。""",
+如某字段确实无法从报告中提取，值设为null。只输出JSON，不含任何其他文字。""",
 
     "social_insurance": """你是中国社保公积金分析专家。
 从这份社保/公积金记录截图中提取信息，只返回JSON，不要解释。
@@ -126,12 +131,11 @@ PARSE_PROMPTS = {
 async def parse_document(
     file: UploadFile = File(...),
     doc_type: str = Form(...),
+    client_api_key: Optional[str] = Form(None),
 ):
-    import base64 as _b64
-    _fb = _b64.b64decode("REMOVED_API_KEY").decode()
-    api_key = os.getenv("ANTHROPIC_API_KEY") or _fb
+    api_key = client_api_key or os.getenv("ANTHROPIC_API_KEY")
     if not api_key:
-        raise HTTPException(status_code=500, detail="ANTHROPIC_API_KEY 未配置")
+        raise HTTPException(status_code=400, detail="请先在页面设置 Anthropic API Key")
 
     prompt = PARSE_PROMPTS.get(doc_type)
     if not prompt:
@@ -217,7 +221,6 @@ async def health():
         "status": "ok",
         "models_loaded": predictor is not None,
         "model_count": len(predictor.models) if predictor else 0,
-        "startup_error": startup_error or None,
         "anthropic_key_set": bool(os.getenv("ANTHROPIC_API_KEY")),
         "files_in_models_dir": sorted(files),
     }
