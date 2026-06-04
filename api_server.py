@@ -47,14 +47,16 @@ async def add_pna_header(request: Request, call_next):
 
 # ── 全局加载模型 ──────────────────────────────────────────────────
 predictor: Optional[Predictor] = None
+startup_error: str = ""
 
 @app.on_event("startup")
 async def startup_event():
-    global predictor
+    global predictor, startup_error
     try:
         predictor = Predictor()
         print("✓ 模型加载完成")
     except Exception as e:
+        startup_error = str(e)
         print(f"✗ 模型加载失败: {e}")
 
 # ── 文档解析 Prompts ──────────────────────────────────────────────
@@ -215,6 +217,7 @@ async def health():
         "status": "ok",
         "models_loaded": predictor is not None,
         "model_count": len(predictor.models) if predictor else 0,
+        "startup_error": startup_error or None,
         "anthropic_key_set": bool(os.getenv("ANTHROPIC_API_KEY")),
         "files_in_models_dir": sorted(files),
     }
